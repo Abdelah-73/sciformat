@@ -31,6 +31,8 @@
             text-align: left !important;
             unicode-bidi: isolate !important;
             font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace !important;
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
         }
     </style>
 </head>
@@ -113,10 +115,10 @@
             <div class="mt-4 flex flex-wrap gap-3 items-center justify-between">
                 <div class="flex gap-2">
                     <button onclick="formatCode()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition text-sm">
-                        ✨ <span data-i18n="btnFormat">تنسيق الكود</span>
+                        ✨ <span data-i18n="btnFormat">تنسيق وهيكلة الكود</span>
                     </button>
                     <button onclick="downloadCodeImage()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-lg transition text-sm">
-                        🖼️ <span data-i18n="btnDownloadImage">تحميل الكود كصورة</span>
+                        🖼️ <span data-i18n="btnDownloadImage">تحميل الكود فقط كصورة</span>
                     </button>
                 </div>
                 <button onclick="copyFormattedCode()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2 rounded-lg transition text-sm">
@@ -128,7 +130,7 @@
         <!-- Section 2: LaTeX Math Converter -->
         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <h2 data-i18n="mathTitle" class="text-xl font-bold mb-2 text-indigo-900">2. محول معادلات LaTeX إلى تنسيق معروض</h2>
-            <p data-i18n="mathDesc" class="text-slate-600 text-sm mb-4">اكتب رمز المعادلة بصيغة LaTeX واعرضها فوراً للتأكد من صحتها قبل إدراجها في التقرير.</p>
+            <p data-i18n="mathDesc" class="text-slate-600 text-sm mb-4">اكتب رمز المعادلة بصيغة LaTeX واعرضها فوراً للتحقق منها قبل إدراجها في التقرير.</p>
 
             <div class="space-y-4">
                 <div>
@@ -137,13 +139,12 @@
                 </div>
 
                 <div class="p-6 border rounded-lg bg-slate-50 flex justify-center items-center">
-                    <!-- عنصر محدد ومباشر للمعادلة فقط بظلفية بيضاء ونظيفة -->
                     <div id="mathRendered" dir="ltr" class="bg-white p-4 rounded text-2xl text-slate-900 inline-block"></div>
                 </div>
 
                 <div class="flex flex-wrap gap-3 justify-between items-center">
                     <button onclick="downloadMathImage()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-lg transition text-sm">
-                        🖼️ <span data-i18n="btnDownloadMathImage">حفظ المعادلة كصورة</span>
+                        🖼️ <span data-i18n="btnDownloadMathImage">حفظ المعادلة فقط كصورة</span>
                     </button>
                     <button onclick="renderMath()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg transition text-sm">
                         🧮 <span data-i18n="btnRenderMath">معالجة المعادلة</span>
@@ -189,8 +190,8 @@
                 lineNums: 'ترقيم الأسطر',
                 originalCode: 'الكود الأصلي:',
                 previewTitle: 'المعاينة والأناقة الاحترافية:',
-                btnFormat: 'تنسيق الكود',
-                btnDownloadImage: 'تحميل الكود كصورة',
+                btnFormat: 'تنسيق وهيكلة الكود',
+                btnDownloadImage: 'تحميل الكود فقط كصورة',
                 btnCopy: 'نسخ للتثبيت في Word مباشرة',
                 copyAlert: 'تم نسخ الكود المنسق! يمكنك الآن لصقه مباشرة داخل Word.',
                 mathTitle: '2. محول معادلات LaTeX إلى تنسيق معروض',
@@ -198,7 +199,7 @@
                 latexLabel: 'صيغة LaTeX:',
                 mathPreview: 'المعاينة الحية للمعادلة:',
                 btnRenderMath: 'معالجة المعادلة',
-                btnDownloadMathImage: 'حفظ المعادلة كصورة',
+                btnDownloadMathImage: 'حفظ المعادلة فقط كصورة',
                 artTitle: 'كيف تنسق الكود البرمجي والمعادلات داخل أوراق البحث والواجبات؟',
                 artP1: 'عند تقديم الواجبات البرمجية أو إعداد التقارير الجامعية، يُواجه معظم الطلاب والباحثين مشكلة خربشة المحاذاة. تتيح لك أداة SciFormat حل هذه المشكلة مجاناً.',
                 artSubtitle: 'نصائح لتنسيق تقارير البرمجة الأكاديمية:',
@@ -216,8 +217,8 @@
                 lineNums: 'Line Numbers',
                 originalCode: 'Source Code:',
                 previewTitle: 'Formatted Preview:',
-                btnFormat: 'Format Code',
-                btnDownloadImage: 'Export Code as PNG',
+                btnFormat: 'Format & Beautify Code',
+                btnDownloadImage: 'Export Code Only as PNG',
                 btnCopy: 'Copy for MS Word',
                 copyAlert: 'Formatted code copied! You can now paste it directly into MS Word.',
                 mathTitle: '2. LaTeX Math Equation Renderer',
@@ -225,7 +226,7 @@
                 latexLabel: 'LaTeX Formula:',
                 mathPreview: 'Live Equation Preview:',
                 btnRenderMath: 'Render Equation',
-                btnDownloadMathImage: 'Export Formula as PNG',
+                btnDownloadMathImage: 'Export Formula Only as PNG',
                 artTitle: 'How to Format Source Code and Equations in Research Papers?',
                 artP1: 'SciFormat helps you convert source code and LaTeX formulas into clean, readable formats.',
                 artSubtitle: 'Tips for Academic Code Formatting:',
@@ -243,8 +244,8 @@
                 lineNums: 'Numéros de ligne',
                 originalCode: 'Code Source:',
                 previewTitle: 'Aperçu structuré:',
-                btnFormat: 'Formater le code',
-                btnDownloadImage: 'Exporter le code en PNG',
+                btnFormat: 'Formater et structurer le code',
+                btnDownloadImage: 'Exporter le code seul en PNG',
                 btnCopy: 'Copier pour Word',
                 copyAlert: 'Code formaté copié! Collez-le directement dans Word.',
                 mathTitle: '2. Convertisseur d’équations LaTeX',
@@ -252,7 +253,7 @@
                 latexLabel: 'Formule LaTeX:',
                 mathPreview: 'Aperçu en direct:',
                 btnRenderMath: 'Rendre l’équation',
-                btnDownloadMathImage: 'Exporter la formule en PNG',
+                btnDownloadMathImage: 'Exporter la formule seule en PNG',
                 artTitle: 'Comment formater le code et les équations dans les rapports?',
                 artP1: 'SciFormat vous aide à convertir vos codes et équations en formats propres.',
                 artSubtitle: 'Conseils pour le formatage académique:',
@@ -279,8 +280,44 @@
             });
         }
 
+        // خوارزمية تفكيك الأسطر وضبط المسافات البادئة تلقائياً للكود المظغوط
+        function autoFormatIndent(code) {
+            if (!code) return '';
+            
+            // إصلاح الأسطر التي تحتوي على مكتبات وموجهات الإدراج
+            let formatted = code
+                .replace(/(#include\s*<[^>]+>)/g, '$1\n')
+                .replace(/(#include\s*"[^"]+")/g, '$1\n')
+                .replace(/;\s*/g, ';\n')
+                .replace(/\{\s*/g, ' {\n')
+                .replace(/\}\s*/g, '\n}\n');
+
+            const lines = formatted.split('\n');
+            let indentLevel = 0;
+            const indentSize = 4;
+            const resultLines = [];
+
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+
+                if (line.startsWith('}')) {
+                    indentLevel = Math.max(0, indentLevel - 1);
+                }
+
+                const indentSpace = ' '.repeat(indentLevel * indentSize);
+                resultLines.push(indentSpace + line);
+
+                if (line.endsWith('{') || (line.includes('{') && !line.includes('}'))) {
+                    indentLevel++;
+                }
+            }
+
+            return resultLines.join('\n');
+        }
+
         function formatCode() {
-            const input = document.getElementById('codeInput').value;
+            const rawInput = document.getElementById('codeInput').value;
             const lang = document.getElementById('languageSelect').value;
             const preview = document.getElementById('codePreview');
             const preContainer = document.getElementById('preContainer');
@@ -292,15 +329,17 @@
                 preContainer.classList.remove('line-numbers');
             }
 
+            // تطبيق التنسيق وهيكلة الأسطر والمسافات
+            const formattedCode = autoFormatIndent(rawInput);
+
             preview.className = `language-${lang} code-force-ltr-input`;
-            preview.textContent = input || '// Source code...';
+            preview.textContent = formattedCode || '// Source code...';
 
             if (window.Prism) {
                 Prism.highlightElement(preview);
             }
         }
 
-        // استهداف عنصر الكود الداخلي فقط من دون الإطار
         function downloadCodeImage() {
             const element = document.getElementById('preContainer');
             html2canvas(element, { backgroundColor: '#2d2d2d' }).then(canvas => {
@@ -311,7 +350,6 @@
             });
         }
 
-        // استهداف عنصر المعادلة المباشر فقط بظلفية بيضاء ونظيفة
         function downloadMathImage() {
             const element = document.getElementById('mathRendered');
             html2canvas(element, { backgroundColor: '#ffffff', scale: 2 }).then(canvas => {
@@ -346,7 +384,7 @@
         }
 
         window.onload = function() {
-            document.getElementById('codeInput').value = `#include <iostream>\n\nint main() {\n    std::cout << "Hello SciFormat!" << std::endl;\n    return 0;\n}`;
+            document.getElementById('codeInput').value = `#include <iostream>#include <vector>#include <string>// كود ملخبط وغير منسق لتجربة الأداة\nint main(){int x=10;double y=20.5;std::vector<std::string>list={"C++","Python","Java"};for(int i=0;i<3;i++){if(x<y){std::cout<<"Item: "<<list[i]<<" | Value: "<<x*i<<std::endl;}else{std::cout<<"Error"<<std::endl;}}return 0;}`;
             formatCode();
             renderMath();
         };
