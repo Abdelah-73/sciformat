@@ -8,9 +8,8 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Prism.js & Line Numbers -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" id="prismTheme" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+    <!-- Monaco Editor (VS Code Engine) CDN Loader -->
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/editor/editor.main.min.css">
 
     <!-- KaTeX لمعالجة ورسم معادلات LaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
@@ -31,8 +30,6 @@
             text-align: left !important;
             unicode-bidi: isolate !important;
             font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace !important;
-            white-space: pre-wrap !important;
-            word-break: break-all !important;
         }
     </style>
 </head>
@@ -40,7 +37,7 @@
 
     <!-- Header -->
     <header class="bg-indigo-600 text-white p-4 shadow-md">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold">SciFormat 🎓</h1>
             
             <div class="flex items-center gap-3">
@@ -56,28 +53,24 @@
     </header>
 
     <!-- AdSense Placeholder Top -->
-    <div class="max-w-5xl mx-auto my-4 p-2 bg-slate-200 text-center text-xs text-gray-500 rounded border border-dashed border-gray-400">
+    <div class="max-w-6xl mx-auto my-4 p-2 bg-slate-200 text-center text-xs text-gray-500 rounded border border-dashed border-gray-400">
         <span data-i18n="adTop">مساحة إعلانية (AdSense Header Banner)</span>
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-5xl mx-auto p-4 space-y-8">
+    <main class="max-w-6xl mx-auto p-4 space-y-8">
         
-        <!-- Section 1: Universal Code Formatter -->
+        <!-- Section 1: Monaco Powered Code Formatter -->
         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
                 <div>
-                    <h2 data-i18n="codeTitle" class="text-xl font-bold text-indigo-900">1. مُنسّق الأكواد البرمجية الشامل</h2>
-                    <p data-i18n="codeDesc" class="text-slate-600 text-sm">أدخل أي كود برمجي للحفاظ على الألوان والمحاذاة عند النسخ إلى Word أو Docs.</p>
+                    <h2 data-i18n="codeTitle" class="text-xl font-bold text-indigo-900">1. مُنسّق ومحرر الأكواد الاحترافي (VS Code Engine)</h2>
+                    <p data-i18n="codeDesc" class="text-slate-600 text-sm">أدخل أو انسخ الكود ليتم تنسيقه وإعادة هيكلته تلقائياً بأعلى دقة لبرامج Word و Docs.</p>
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-2">
-                    <label class="flex items-center gap-1 text-sm font-semibold cursor-pointer bg-slate-100 px-2 py-1.5 rounded border">
-                        <input type="checkbox" id="lineNumbersToggle" onchange="formatCode()" checked class="accent-indigo-600">
-                        <span data-i18n="lineNums">ترقيم الأسطر</span>
-                    </label>
-
-                    <select id="languageSelect" onchange="formatCode()" class="p-2 border rounded-lg bg-slate-100 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+                    <!-- خيار لغة البرمجة -->
+                    <select id="languageSelect" onchange="changeEditorLanguage()" class="p-2 border rounded-lg bg-slate-100 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
                         <option value="cpp">C / C++</option>
                         <option value="python">Python</option>
                         <option value="java">Java</option>
@@ -88,37 +81,31 @@
                         <option value="html">HTML / Markup</option>
                         <option value="css">CSS</option>
                         <option value="sql">SQL</option>
-                        <option value="bash">Bash / Shell</option>
                         <option value="rust">Rust</option>
                         <option value="go">Go</option>
+                    </select>
+
+                    <!-- خيار ثيم المحرر -->
+                    <select id="themeSelect" onchange="changeEditorTheme()" class="p-2 border rounded-lg bg-slate-100 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option value="vs-dark">Dark (VS Code)</option>
+                        <option value="vs">Light (Academic)</option>
                     </select>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Input -->
-                <div>
-                    <label data-i18n="originalCode" class="block text-sm font-semibold mb-2">الكود الأصلي:</label>
-                    <textarea id="codeInput" oninput="formatCode()" class="code-force-ltr-input w-full h-72 p-3 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50" placeholder="// Paste your code here..."></textarea>
-                </div>
-
-                <!-- Preview & Output -->
-                <div>
-                    <label data-i18n="previewTitle" class="block text-sm font-semibold mb-2">المعاينة والأناقة الاحترافية:</label>
-                    <div id="codePreviewContainer" class="code-force-ltr-input w-full h-72 p-3 border rounded-lg overflow-auto bg-[#2d2d2d] text-white text-sm">
-                        <pre id="preContainer" class="line-numbers code-force-ltr-input m-0 p-0"><code id="codePreview" class="code-force-ltr-input">// Preview...</code></pre>
-                    </div>
-                </div>
+            <!-- Monaco Editor Window -->
+            <div class="mb-4">
+                <div id="monacoContainer" class="w-full h-96 border rounded-lg overflow-hidden shadow-inner code-force-ltr"></div>
             </div>
 
             <!-- Action Buttons -->
             <div class="mt-4 flex flex-wrap gap-3 items-center justify-between">
                 <div class="flex gap-2">
-                    <button onclick="formatCode()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition text-sm">
-                        ✨ <span data-i18n="btnFormat">تنسيق وهيكلة الكود</span>
+                    <button onclick="autoFormatMonacoCode()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition text-sm">
+                        ✨ <span data-i18n="btnFormat">تنسيق وهيكلة الكود تلقائياً</span>
                     </button>
                     <button onclick="downloadCodeImage()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-lg transition text-sm">
-                        🖼️ <span data-i18n="btnDownloadImage">تحميل الكود فقط كصورة</span>
+                        🖼️ <span data-i18n="btnDownloadImage">تحميل الكود كصورة PNG</span>
                     </button>
                 </div>
                 <button onclick="copyFormattedCode()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2 rounded-lg transition text-sm">
@@ -139,7 +126,7 @@
                 </div>
 
                 <div class="p-6 border rounded-lg bg-slate-50 flex justify-center items-center">
-                    <div id="mathRendered" dir="ltr" class="bg-white p-4 rounded text-2xl text-slate-900 inline-block"></div>
+                    <div id="mathRendered" dir="ltr" class="bg-white p-4 rounded text-2xl text-slate-900 inline-block shadow-sm"></div>
                 </div>
 
                 <div class="flex flex-wrap gap-3 justify-between items-center">
@@ -162,7 +149,7 @@
         <article class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-slate-700 space-y-4">
             <h3 data-i18n="artTitle" class="text-lg font-bold text-slate-900">كيف تنسق الكود البرمجي والمعادلات داخل أوراق البحث والواجبات؟</h3>
             <p data-i18n="artP1" class="text-sm leading-relaxed">
-                عند تقديم الواجبات البرمجية أو إعداد التقارير الجامعية، يُواجه معظم الطلاب والباحثين مشكلة خربشة المحاذاة. تتيح لك أداة SciFormat حل هذه المشكلة مجاناً.
+                عند تقديم الواجبات البرمجية أو إعداد التقارير الجامعية، يُواجه معظم الطلاب والباحثين مشكلة خربشة المحاذاة. تتيح لك أداة SciFormat حل هذه المشكلة مجاناً وبأدوات VS Code المدمجة.
             </p>
             <h4 data-i18n="artSubtitle" class="font-bold text-slate-800 text-sm">نصائح لتنسيق تقارير البرمجة الأكاديمية:</h4>
             <ul class="list-disc list-inside text-sm space-y-1 text-slate-600">
@@ -173,10 +160,8 @@
         </article>
     </main>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <!-- Monaco Editor Loader Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"></script>
 
     <script>
         const translations = {
@@ -185,13 +170,11 @@
                 badge: 'أداة الطلاب والباحثين المجانية',
                 adTop: 'مساحة إعلانية (AdSense Header Banner)',
                 adNative: 'مساحة إعلانية (AdSense In-Article Native)',
-                codeTitle: '1. مُنسّق الأكواد البرمجية الشامل (جميع اللغات)',
-                codeDesc: 'أدخل أي كود برمجي للحفاظ على الألوان والمحاذاة عند النسخ إلى Word أو Docs.',
-                lineNums: 'ترقيم الأسطر',
+                codeTitle: '1. مُنسّق ومحرر الأكواد الاحترافي (VS Code Engine)',
+                codeDesc: 'أدخل أو انسخ الكود ليتم تنسيقه وإعادة هيكلته تلقائياً بأعلى دقة لبرامج Word و Docs.',
                 originalCode: 'الكود الأصلي:',
-                previewTitle: 'المعاينة والأناقة الاحترافية:',
-                btnFormat: 'تنسيق وهيكلة الكود',
-                btnDownloadImage: 'تحميل الكود فقط كصورة',
+                btnFormat: 'تنسيق وهيكلة الكود تلقائياً',
+                btnDownloadImage: 'تحميل الكود كصورة PNG',
                 btnCopy: 'نسخ للتثبيت في Word مباشرة',
                 copyAlert: 'تم نسخ الكود المنسق! يمكنك الآن لصقه مباشرة داخل Word.',
                 mathTitle: '2. محول معادلات LaTeX إلى تنسيق معروض',
@@ -212,13 +195,10 @@
                 badge: 'Free Tool for Students & Researchers',
                 adTop: 'Advertisement Space (AdSense Header Banner)',
                 adNative: 'Advertisement Space (AdSense In-Article Native)',
-                codeTitle: '1. Universal Code Formatter (All Languages)',
-                codeDesc: 'Format source code to preserve syntax highlighting when pasting into Word or Docs.',
-                lineNums: 'Line Numbers',
-                originalCode: 'Source Code:',
-                previewTitle: 'Formatted Preview:',
-                btnFormat: 'Format & Beautify Code',
-                btnDownloadImage: 'Export Code Only as PNG',
+                codeTitle: '1. Professional Code Formatter (VS Code Engine)',
+                codeDesc: 'Format and beautify your code with VS Code editor engine for Microsoft Word.',
+                btnFormat: 'Auto Format & Beautify',
+                btnDownloadImage: 'Export Code as PNG',
                 btnCopy: 'Copy for MS Word',
                 copyAlert: 'Formatted code copied! You can now paste it directly into MS Word.',
                 mathTitle: '2. LaTeX Math Equation Renderer',
@@ -239,13 +219,10 @@
                 badge: 'Outil gratuit pour étudiants et chercheurs',
                 adTop: 'Espace publicitaire (AdSense Header Banner)',
                 adNative: 'Espace publicitaire (AdSense In-Article Native)',
-                codeTitle: '1. Formateur de code universel (Tous les langages)',
-                codeDesc: 'Conservez la coloration syntaxique lors du collage dans MS Word.',
-                lineNums: 'Numéros de ligne',
-                originalCode: 'Code Source:',
-                previewTitle: 'Aperçu structuré:',
-                btnFormat: 'Formater et structurer le code',
-                btnDownloadImage: 'Exporter le code seul en PNG',
+                codeTitle: '1. Formateur de code professionnel (Moteur VS Code)',
+                codeDesc: 'Formatez et structurez votre code avec le moteur VS Code pour MS Word.',
+                btnFormat: 'Formatage automatique',
+                btnDownloadImage: 'Exporter le code en PNG',
                 btnCopy: 'Copier pour Word',
                 copyAlert: 'Code formaté copié! Collez-le directement dans Word.',
                 mathTitle: '2. Convertisseur d’équations LaTeX',
@@ -263,7 +240,44 @@
             }
         };
 
+        let editor;
         let currentLang = 'ar';
+
+        // تهيئة محرر Monaco Editor
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
+        require(['vs/editor/editor.main'], function() {
+            editor = monaco.editor.create(document.getElementById('monacoContainer'), {
+                value: `#include <iostream>\n#include <vector>\n#include <string>\n\n// كود للتجربة\nint main() {\n    int x = 10;\n    double y = 20.5;\n    std::vector<std::string> list = {"C++", "Python", "Java"};\n    for (int i = 0; i < 3; i++) {\n        if (x < y) {\n            std::cout << "Item: " << list[i] << " | Value: " << x * i << std::endl;\n        } else {\n            std::cout << "Error" << std::endl;\n        }\n    }\n    return 0;\n}`,
+                language: 'cpp',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14,
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+                lineNumbers: 'on',
+                folding: true
+            });
+        });
+
+        function changeEditorLanguage() {
+            const lang = document.getElementById('languageSelect').value;
+            if (editor) {
+                monaco.editor.setModelLanguage(editor.getModel(), lang);
+            }
+        }
+
+        function changeEditorTheme() {
+            const theme = document.getElementById('themeSelect').value;
+            if (editor) {
+                monaco.editor.setTheme(theme);
+            }
+        }
+
+        function autoFormatMonacoCode() {
+            if (editor) {
+                editor.getAction('editor.action.formatDocument').run();
+            }
+        }
 
         function changeUILanguage(langKey) {
             currentLang = langKey;
@@ -280,71 +294,11 @@
             });
         }
 
-        // خوارزمية تفكيك الأسطر وضبط المسافات البادئة تلقائياً للكود المظغوط
-        function autoFormatIndent(code) {
-            if (!code) return '';
-            
-            // إصلاح الأسطر التي تحتوي على مكتبات وموجهات الإدراج
-            let formatted = code
-                .replace(/(#include\s*<[^>]+>)/g, '$1\n')
-                .replace(/(#include\s*"[^"]+")/g, '$1\n')
-                .replace(/;\s*/g, ';\n')
-                .replace(/\{\s*/g, ' {\n')
-                .replace(/\}\s*/g, '\n}\n');
-
-            const lines = formatted.split('\n');
-            let indentLevel = 0;
-            const indentSize = 4;
-            const resultLines = [];
-
-            for (let line of lines) {
-                line = line.trim();
-                if (!line) continue;
-
-                if (line.startsWith('}')) {
-                    indentLevel = Math.max(0, indentLevel - 1);
-                }
-
-                const indentSpace = ' '.repeat(indentLevel * indentSize);
-                resultLines.push(indentSpace + line);
-
-                if (line.endsWith('{') || (line.includes('{') && !line.includes('}'))) {
-                    indentLevel++;
-                }
-            }
-
-            return resultLines.join('\n');
-        }
-
-        function formatCode() {
-            const rawInput = document.getElementById('codeInput').value;
-            const lang = document.getElementById('languageSelect').value;
-            const preview = document.getElementById('codePreview');
-            const preContainer = document.getElementById('preContainer');
-            const showLineNums = document.getElementById('lineNumbersToggle').checked;
-
-            if (showLineNums) {
-                preContainer.classList.add('line-numbers');
-            } else {
-                preContainer.classList.remove('line-numbers');
-            }
-
-            // تطبيق التنسيق وهيكلة الأسطر والمسافات
-            const formattedCode = autoFormatIndent(rawInput);
-
-            preview.className = `language-${lang} code-force-ltr-input`;
-            preview.textContent = formattedCode || '// Source code...';
-
-            if (window.Prism) {
-                Prism.highlightElement(preview);
-            }
-        }
-
         function downloadCodeImage() {
-            const element = document.getElementById('preContainer');
-            html2canvas(element, { backgroundColor: '#2d2d2d' }).then(canvas => {
+            const element = document.getElementById('monacoContainer');
+            html2canvas(element, { backgroundColor: '#1e1e1e' }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'code-only.png';
+                link.download = 'code-vs-format.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
@@ -361,13 +315,15 @@
         }
 
         function copyFormattedCode() {
-            const container = document.getElementById('codePreviewContainer');
-            const range = document.createRange();
-            range.selectNode(container);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
-            document.execCommand('copy');
-            alert(translations[currentLang].copyAlert);
+            if (!editor) return;
+            const codeValue = editor.getValue();
+            
+            // نسخ النص المنسق مع المحافظة على الهيكلية والأسطر
+            navigator.clipboard.writeText(codeValue).then(() => {
+                alert(translations[currentLang].copyAlert);
+            }).catch(() => {
+                alert('Error copying to clipboard');
+            });
         }
 
         function renderMath() {
@@ -384,8 +340,6 @@
         }
 
         window.onload = function() {
-            document.getElementById('codeInput').value = `#include <iostream>#include <vector>#include <string>// كود ملخبط وغير منسق لتجربة الأداة\nint main(){int x=10;double y=20.5;std::vector<std::string>list={"C++","Python","Java"};for(int i=0;i<3;i++){if(x<y){std::cout<<"Item: "<<list[i]<<" | Value: "<<x*i<<std::endl;}else{std::cout<<"Error"<<std::endl;}}return 0;}`;
-            formatCode();
             renderMath();
         };
     </script>
