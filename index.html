@@ -19,10 +19,8 @@
     <!-- html2canvas للتحميل كصورة -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <!-- js-beautify لتنسيق المسافات والأسطر لجميع اللغات -->
+    <!-- JS-Beautify لتنسيق الأكواد بدقة عالية جداً -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
 
     <style>
         .code-force-ltr {
@@ -75,10 +73,10 @@
                     </label>
 
                     <select id="languageSelect" onchange="processAndHighlight()" class="p-2 border rounded-lg bg-slate-100 text-sm font-semibold focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <option value="javascript">JavaScript</option>
                         <option value="cpp">C / C++</option>
                         <option value="python">Python</option>
                         <option value="java">Java</option>
-                        <option value="javascript">JavaScript</option>
                         <option value="csharp">C#</option>
                         <option value="html">HTML / Markup</option>
                         <option value="css">CSS</option>
@@ -221,39 +219,15 @@
             });
         }
 
-        // خوارزمية ذكية لتنسيق وفك الأسطر والمسافات
-        function formatLogic(code) {
-            if (!code) return '';
-            let c = code
-                .replace(/(#include\s*<[^>]+>)/g, '$1\n')
-                .replace(/;\s*/g, ';\n')
-                .replace(/\{\s*/g, ' {\n')
-                .replace(/\}\s*/g, '\n}\n');
-
-            let lines = c.split('\n');
-            let indent = 0;
-            let out = [];
-
-            for (let line of lines) {
-                line = line.trim();
-                if (!line) continue;
-                if (line.startsWith('}')) indent = Math.max(0, indent - 1);
-                out.push('    '.repeat(indent) + line);
-                if (line.endsWith('{')) indent++;
-            }
-            return out.join('\n');
-        }
-
         function beautifyCode() {
             const input = document.getElementById('codeInput');
-            const lang = document.getElementById('languageSelect').value;
-            
-            if (lang === 'html' || lang === 'css' || lang === 'javascript') {
-                if (window.js_beautify) {
-                    input.value = js_beautify(input.value, { indent_size: 4 });
-                }
-            } else {
-                input.value = formatLogic(input.value);
+            if (window.js_beautify && input.value.trim().length > 0) {
+                // استخدام مكتبة js_beautify الاحترافية لتنسيق الأكواد بدون كسر حلقاتها
+                input.value = js_beautify(input.value, { 
+                    indent_size: 4,
+                    space_in_empty_paren: false,
+                    preserve_newlines: true
+                });
             }
             processAndHighlight();
         }
@@ -323,7 +297,6 @@
         }
 
         window.onload = function() {
-            document.getElementById('codeInput').value = `#include <iostream>#include <vector>#include <string>\nint main(){int x=10;double y=20.5;std::vector<std::string>list={"C++","Python","Java"};for(int i=0;i<3;i++){if(x<y){std::cout<<"Item: "<<list[i]<<" | Value: "<<x*i<<std::endl;}else{std::cout<<"Error"<<std::endl;}}return 0;}`;
             processAndHighlight();
             renderMath();
         };
